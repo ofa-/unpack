@@ -35,7 +35,7 @@ def main():
     for data in sys.stdin:
         unpack(args, data)
 
-def unpack(args, data):
+def _unpack(data):
     data = re.sub(r"^HC1:?", "", data)
     data = b45decode(data)
 
@@ -59,7 +59,20 @@ def unpack(args, data):
 
     uvci = payload["health_claims"][1]["v"][0]["ci"]
     name = payload["health_claims"][1]["nam"]
-    name = name["gn"] + " " + name["fn"]
+
+    class _: pass
+    _.first_name = name["gn"]
+    _.last_name = name["fn"]
+    _.payload = payload
+    _.uvci = uvci
+
+    return _
+
+def unpack(args, data):
+    _ = _unpack(data)
+    uvci = _.uvci
+    name = _.first_name + " " + _.last_name
+    payload = _.payload
 
     if args.uvci:
         output = uvci
