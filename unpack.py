@@ -7,7 +7,6 @@ import re
 
 import zlib
 import cbor2
-from base64 import b64decode
 from base45 import b45decode
 from cose.messages import CoseMessage
 import hashlib
@@ -27,9 +26,6 @@ parser.add_argument(
     "-n", "--name", action="store_true", help="Show name along with hash"
 )
 parser.add_argument(
-    "-B", "--base64", action="store_true", help="Use base64 instead of base45"
-)
-parser.add_argument(
     "-h", "--help", action="help", help=argparse.SUPPRESS
 )
 args = parser.parse_args()
@@ -40,11 +36,8 @@ def main():
         unpack(args, data)
 
 def unpack(args, data):
-    if args.base64:
-        data = b64decode(data)
-    else:
-        data = re.sub(r"^HC1:?", "", data)
-        data = b45decode(data)
+    data = re.sub(r"^HC1:?", "", data)
+    data = b45decode(data)
 
     try:
         data = zlib.decompress(data)

@@ -6,7 +6,7 @@ Overview
 
 ```
 $ ./unpack.py --help
-usage: unpack.py [-u] [-H] [-n] [-B]
+usage: unpack.py [-u] [-H] [-n]
 
 Parse a base45/zlib/cose/cbor QR to json.
 
@@ -14,7 +14,6 @@ optional arguments:
   -u, --uvci    Show cert uvci
   -H, --hash    Show cert hash
   -n, --name    Show name along with hash
-  -B, --base64  Use base64 instead of base45
 ```
 
 ```
