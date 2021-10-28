@@ -57,27 +57,32 @@ def _unpack(data):
     for k,v in section.items():
         payload[k] = payload.pop(v)
 
-    uvci = payload["health_claims"][1]["v"][0]["ci"]
-    name = payload["health_claims"][1]["nam"]
+    u = payload["health_claims"][1]
+    uv = u["v"][0]
+    uvco = uv["co"]
+    uvci = uv["ci"]
+    name = u["nam"]
 
     class _: pass
     _.first_name = name["gn"]
     _.last_name = name["fn"]
     _.payload = payload
     _.uvci = uvci
+    _.country = uvco
 
     return _
 
 def unpack(args, data):
     _ = _unpack(data)
     uvci = _.uvci
+    uvco = _.country
     name = _.first_name + " " + _.last_name
     payload = _.payload
 
     if args.uvci:
         output = uvci
     elif args.hash:
-        output = hashlib.sha256(("FR"+uvci).encode('utf-8')).hexdigest()
+        output = hashlib.sha256((uvco+uvci).encode('utf-8')).hexdigest()
         if args.name: output += " " + name
     else:
         output = json.dumps(payload, indent=4, sort_keys=True)
